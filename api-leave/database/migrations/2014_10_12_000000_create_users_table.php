@@ -12,19 +12,27 @@ class CreateUsersTable extends Migration
      * @return void
      */
 public function up()
-{
-    Schema::create('users', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('username')->unique(); // เพิ่มบรรทัดนี้
-        $table->string('email')->unique()->nullable(); // ทำให้ email เป็น nullable เผื่อไม่ได้ใช้
-        $table->string('role')->default('user'); // เพิ่มบรรทัดนี้ (ถ้ายังไม่มี)
-        $table->timestamp('email_verified_at')->nullable();
-        $table->string('password');
-        $table->rememberToken();
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('username')->unique();
+            $table->string('email')->nullable();
+            $table->string('password');
+            $table->string('role')->default('user');
+            
+            // +++ สิ่งที่ต้องเพิ่มเข้าไปเพื่อให้ Error 500 หายไป +++
+            $table->string('rank')->nullable();
+            $table->string('position')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('duty')->nullable();
+            // +++++++++++++++++++++++++++++++++++++++++
+
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

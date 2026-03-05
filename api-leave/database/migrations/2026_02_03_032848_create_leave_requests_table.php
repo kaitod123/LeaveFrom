@@ -11,25 +11,31 @@ class CreateLeaveRequestsTable extends Migration
      *
      * @return void
      */
-    public function up()
-{
-    Schema::create('leave_requests', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('user_id'); // Laravel 8 ใช้แบบนี้
-        $table->string('fullname');
-        $table->string('phone');
-        $table->string('leave_type');
-        $table->date('start_date');
-        $table->date('end_date');
-        $table->date('create_date');
-        $table->text('reason')->nullable();
-        $table->string('pdf_path')->nullable();
-        $table->timestamps();
+ public function up()
+    {
+        Schema::create('leave_requests', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('fullname');
+            
+            // +++ สิ่งที่ต้องเพิ่มเข้าไป +++
+            $table->string('rank')->nullable();
+            $table->string('position')->nullable();
+            $table->string('affiliation')->nullable();
+            $table->string('duty')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('status')->default('pending');
+            // ++++++++++++++++++++++++
 
-        // เชื่อม Foreign Key
-        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-    });
-}
+            $table->string('leave_type');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->date('create_date')->nullable();
+            $table->text('reason')->nullable();
+            $table->string('pdf_path')->nullable();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

@@ -40,5 +40,4 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath 
 
 # กำหนด Port
 EXPOSE 80
-CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && apache2-foreground
-CMD php artisan migrate --force && apache2-foreground
+CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && php artisan migrate --force && apache2-foreground
