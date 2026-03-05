@@ -22,6 +22,7 @@ return [
 'allowed_origins' => ['https://your-react-app.onrender.com'],
 
     'allowed_origins_patterns' => [],
+    'allowed_origins' => ['https://po-leave-frontend.onrender.com'],
 
     'allowed_headers' => ['*'], // อนุญาตทุก Header
 
