@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Helper API
     Route::get('/leader-info', [LeaveController::class, 'getLeaderInfo']);
-    
+    Route::post('/users/import', [UserController::class, 'import']);
     // User Management
     Route::get('/users', [UserController::class, 'index']);
     Route::put('/users/{id}', [UserController::class, 'update']);

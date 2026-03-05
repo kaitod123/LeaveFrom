@@ -83,6 +83,9 @@ class UserController extends Controller
     // --- ฟังก์ชัน Import CSV (ใหม่) ---
     public function import(Request $request)
     {
+        if (!$request->hasFile('file')) {
+        return response()->json(['message' => 'ไม่พบไฟล์ที่อัปโหลด'], 400);
+    }
         if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'ไม่มีสิทธิ์เข้าถึง'], 403);
         }
