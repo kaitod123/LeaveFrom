@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'], // อนุญาตทุก Method (GET, POST, etc.)
 
-    'allowed_origins' => ['*'], // อนุญาตทุกเว็บ (หรือระบุ 'http://localhost:5173')
+'allowed_origins' => ['https://your-react-app.onrender.com'],
 
     'allowed_origins_patterns' => [],
 
@@ -30,12 +30,5 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false,
-'paths' => ['api/*', 'sanctum/csrf-cookie'],
-    'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'], // หรือใส่โดเมนของ Frontend เช่น ['https://your-frontend.vercel.app']
-    'allowed_origins_patterns' => [],
-    'allowed_headers' => ['*'],
-    'exposed_headers' => [],
-    'max_age' => 0,
-    'supports_credentials' => false, // หรือ true ถ้าใช้ Cookie-based auth
+
 ];
