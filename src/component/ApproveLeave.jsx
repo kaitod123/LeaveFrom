@@ -22,7 +22,7 @@ const ApproveLeave = ({ user }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://127.0.0.1:8000/api/leave-request', {
+      const res = await fetch('https://po-leave-backend.onrender.com/api/leave-request', {
         headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -46,7 +46,7 @@ const ApproveLeave = ({ user }) => {
     if (!window.confirm(`ยืนยันการ${status === 'approved' ? 'อนุมัติ' : 'ไม่อนุมัติ'}?`)) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/leave-request/${id}/status`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/leave-request/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -64,7 +64,7 @@ const ApproveLeave = ({ user }) => {
     formData.append('pdf', file);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/leave-request/${id}/upload-pdf`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/leave-request/${id}/upload-pdf`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
         body: formData

@@ -16,7 +16,7 @@ const Login = ({ onLogin, onForgot }) => {
     setError('');
     
     try {
-        const res = await fetch('http://127.0.0.1:8000/api/login', {
+        const res = await fetch('https://po-leave-backend.onrender.com/api/login', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',

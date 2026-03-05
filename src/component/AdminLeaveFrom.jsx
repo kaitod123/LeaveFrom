@@ -52,7 +52,7 @@ const AdminLeaveForm = ({ user, type }) => {
   // ดึงข้อมูล Leader จาก API ตามหน้าที่ (duty)
   const fetchLeaderInfo = async (matchValue) => {
       try {
-          const response = await fetch(`http://127.0.0.1:8000/api/leader-info?match=${matchValue}`, {
+          const response = await fetch(`https://po-leave-backend.onrender.com/api/leader-info?match=${matchValue}`, {
               headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
           });
           const data = await response.json();
@@ -119,7 +119,7 @@ const AdminLeaveForm = ({ user, type }) => {
           cmonth: new Date().toISOString().slice(0, 10) 
       };
 
-      const response = await fetch('http://127.0.0.1:8000/api/leave-request', {
+      const response = await fetch('https://po-leave-backend.onrender.com/api/leave-request', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

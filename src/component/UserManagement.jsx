@@ -22,7 +22,7 @@ const UserManagement = ({ currentUser }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://127.0.0.1:8000/api/users', {
+      const res = await fetch('https://po-leave-backend.onrender.com/api/users', {
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -54,7 +54,7 @@ const UserManagement = ({ currentUser }) => {
       setIsImporting(true);
       try {
           const token = localStorage.getItem('token');
-          const res = await fetch('http://127.0.0.1:8000/api/users/import', {
+          const res = await fetch('https://po-leave-backend.onrender.com/api/users/import', {
               method: 'POST',
               headers: { 
                   'Authorization': `Bearer ${token}`,
@@ -100,7 +100,7 @@ const UserManagement = ({ currentUser }) => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/users/${id}`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ const UserManagement = ({ currentUser }) => {
     if (!window.confirm("⚠️ คุณแน่ใจหรือไม่ที่จะลบผู้ใช้งานท่านนี้?")) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/users/${id}`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',

@@ -33,7 +33,7 @@ const LeaveForm2 = ({ user, type }) => {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://127.0.0.1:8000/api/users', {
+        const res = await fetch('https://po-leave-backend.onrender.com/api/users', {
           headers: { 
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
@@ -85,7 +85,7 @@ const LeaveForm2 = ({ user, type }) => {
       }
       try {
          const token = localStorage.getItem('token');
-         const res = await fetch(`http://127.0.0.1:8000/api/leader-info?match=${encodeURIComponent(formData.duty)}`, {
+         const res = await fetch(`https://po-leave-backend.onrender.com/api/leader-info?match=${encodeURIComponent(formData.duty)}`, {
            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
          });
          if (res.ok) {
@@ -158,7 +158,7 @@ const LeaveForm2 = ({ user, type }) => {
             leaveType: formData.leaveType
         };
 
-        const res = await fetch('http://127.0.0.1:8000/api/leave-request', {
+        const res = await fetch('https://po-leave-backend.onrender.com/api/leave-request', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

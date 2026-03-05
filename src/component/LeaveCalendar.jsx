@@ -13,7 +13,7 @@ const LeaveCalendar = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://127.0.0.1:8000/api/leave-request', {
+      const res = await fetch('https://po-leave-backend.onrender.com/api/leave-request', {
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${token}`

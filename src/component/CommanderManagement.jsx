@@ -23,7 +23,7 @@ const CommanderManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://127.0.0.1:8000/api/commanders', {
+      const res = await fetch('https://po-leave-backend.onrender.com/api/commanders', {
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
       });
       if (res.ok) {
@@ -64,8 +64,8 @@ const CommanderManagement = () => {
       // ตรวจสอบว่าเป็นการ "แก้ไข(PUT)" หรือ "เพิ่มใหม่(POST)"
       const isEdit = formData.id !== null;
       const url = isEdit 
-          ? `http://127.0.0.1:8000/api/commanders/${formData.id}` 
-          : 'http://127.0.0.1:8000/api/commanders';
+          ? `https://po-leave-backend.onrender.com/api/commanders/${formData.id}` 
+          : 'https://po-leave-backend.onrender.com/api/commanders';
       const method = isEdit ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -103,7 +103,7 @@ const CommanderManagement = () => {
     if (!window.confirm("⚠️ ยืนยันการลบข้อมูลสายการบังคับบัญชานี้?")) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/commanders/${id}`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/commanders/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
       });

@@ -31,7 +31,7 @@ const History = ({ user }) => {
 
       if (currentPublicDuty) {
         // --- โหมดสาธารณะ (ไม่ต้องใช้ Token) ---
-        url = `http://127.0.0.1:8000/api/public/leaves?duty=${encodeURIComponent(currentPublicDuty)}`;
+        url = `https://po-leave-backend.onrender.com/api/public/leaves?duty=${encodeURIComponent(currentPublicDuty)}`;
         if (search) url += `&search=${encodeURIComponent(search)}`;
       } else {
         // --- โหมดสมาชิก (ใช้ Token) ---
@@ -43,8 +43,8 @@ const History = ({ user }) => {
         }
         headers['Authorization'] = `Bearer ${token}`;
         url = search 
-          ? `http://127.0.0.1:8000/api/leave-request?search=${encodeURIComponent(search)}`
-          : 'http://127.0.0.1:8000/api/leave-request';
+          ? `https://po-leave-backend.onrender.com/api/leave-request?search=${encodeURIComponent(search)}`
+          : 'https://po-leave-backend.onrender.com/api/leave-request';
       }
 
       const res = await fetch(url, { headers });
@@ -86,7 +86,7 @@ const History = ({ user }) => {
     setIsDownloading(id);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/leave-request/${id}/word`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/leave-request/${id}/word`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
       });
@@ -111,7 +111,7 @@ const History = ({ user }) => {
     if (!window.confirm("ยืนยันการลบ?")) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/api/leave-request/${id}`, {
+      const res = await fetch(`https://po-leave-backend.onrender.com/api/leave-request/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
       });
@@ -129,7 +129,7 @@ const History = ({ user }) => {
     const token = localStorage.getItem('token');
     try {
       for (const id of selectedIds) {
-        await fetch(`http://127.0.0.1:8000/api/leave-request/${id}`, {
+        await fetch(`https://po-leave-backend.onrender.com/api/leave-request/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
         });
@@ -218,7 +218,7 @@ const History = ({ user }) => {
                 <td className="py-3 px-4 text-center">
                   <div className="flex justify-center gap-2">
                     {leave.pdf_path && (
-                        <a href={`http://127.0.0.1:8000/storage/${leave.pdf_path}`} target="_blank" className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs border border-blue-200">PDF</a>
+                        <a href={`https://po-leave-backend.onrender.com/storage/${leave.pdf_path}`} target="_blank" className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs border border-blue-200">PDF</a>
                     )}
                     {canManage && (
                         <>
