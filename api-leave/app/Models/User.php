@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
+        'email',
         'role',
         // เพิ่มฟิลด์ใหม่
         'rank',

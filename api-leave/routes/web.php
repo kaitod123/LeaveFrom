@@ -21,15 +21,17 @@ Route::get('/run-migrate', function () {
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/init-admin', function () {
-    // คำสั่งสร้าง Admin เริ่มต้น (แก้ไขข้อมูลตามต้องการ)
-    \App\Models\User::updateOrCreate(
-        ['username' => 'admin'],
-        [
-            'name' => 'Administrator',
-            'password' => bcrypt('password123'), // ตั้งรหัสผ่านที่นี่
-            'role' => 'admin'
-        ]
-    );
-    return "Admin created!";
+Route::get('/force-migrate-fresh', function () {
+    // คำสั่งนี้จะลบทุกตารางและสร้างใหม่ตามไฟล์ Migration ล่าสุดของคุณ
+    Artisan::call('migrate:fresh', ['--force' => true]);
+
+    // หลังจากลบตารางแล้ว ต้องสร้าง User Admin กลับมาใหม่ทันที
+    \App\Models\User::create([
+        'name' => 'Administrator',
+        'username' => 'admin',
+        'password' => bcrypt('password123'),
+        'role' => 'admin'
+    ]);
+
+    return "Database Reset and Migrated Successfully! Please login with admin / password123";
 });
