@@ -21,3 +21,15 @@ Route::get('/run-migrate', function () {
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/init-admin', function () {
+    // คำสั่งสร้าง Admin เริ่มต้น (แก้ไขข้อมูลตามต้องการ)
+    \App\Models\User::updateOrCreate(
+        ['username' => 'admin'],
+        [
+            'name' => 'Administrator',
+            'password' => bcrypt('password123'), // ตั้งรหัสผ่านที่นี่
+            'role' => 'admin'
+        ]
+    );
+    return "Admin created!";
+});
