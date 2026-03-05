@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: police-leave-backend
+    env: php
+    plan: free # หรือแพลนที่คุณใช้งาน
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan key:generate --force
+      php artisan migrate --force
+      php artisan storage:link
+    startCommand: "apache2-foreground" # หรือ "php artisan serve --host=0.0.0.0 --port=$PORT" ถ้าไม่ได้ใช้ Docker
+    envVars:
+      - key: APP_NAME
+        value: PoliceLeave
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: mysql # หรือ pgsql ขึ้นอยู่กับฐานข้อมูลที่คุณจะใช้
+      - key: DB_HOST
+        value: ... # ใส่ URL ของฐานข้อมูล
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: ...
+      - key: DB_USERNAME
+        value: ...
+      - key: DB_PASSWORD
+        value: ...
+    disk:
+      name: storage-disk
+      mountPath: /var/www/html/storage/app/public # Path นี้อาจเปลี่ยนไปตามโครงสร้างของ Render
+      sizeGB: 1

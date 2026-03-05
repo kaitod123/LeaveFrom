@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Sarabun', sans-serif;
+}
+
+body {
+  @apply bg-gray-100;
+}
+
+/* Class สำหรับกำหนดฟอนต์ Sarabun (ใช้ใน JSX) */
+.font-sarabun {
+  font-family: 'Sarabun', sans-serif;
+}
+
+/* ตกแต่งส่วนที่เป็นกระดาษ A4 จำลอง */
+.a4-paper {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+  margin: auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+/* สไตล์สำหรับซ่อนองค์ประกอบที่ไม่ต้องการเมื่อสั่งพิมพ์ */
+@media print {
+  /* ซ่อนฟอร์มฝั่งซ้าย, ปุ่มต่างๆ, และ scrollbar เวลาสั่งพิมพ์ */
+  .no-print, button, input, select, textarea, ::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  /* ปรับให้ส่วนใบลาแสดงผลเต็มหน้ากระดาษ */
+  .print-section {
+    width: 100% !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  
+  /* บังคับพื้นหลังเป็นสีขาว */
+  body {
+    background: white;
+  }
+
+  /* จัดการ Page Break */
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+}
