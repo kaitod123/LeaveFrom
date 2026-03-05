@@ -3,6 +3,7 @@ FROM php:8.1-apache
 
 # ติดตั้งส่วนขยายที่ Laravel ต้องการ
 RUN apt-get update && apt-get install -y \
+    libpq-dev \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -35,5 +36,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+RUN docker-php-ext-install pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
+
 # กำหนด Port
 EXPOSE 80
+CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && apache2-foreground
