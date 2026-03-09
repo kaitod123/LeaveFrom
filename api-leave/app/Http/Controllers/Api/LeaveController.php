@@ -169,73 +169,66 @@ class LeaveController extends Controller
             if (str_contains($leave->leave_type, 'ลากิจ')) $templateFile = 'template2.docx';
             elseif (str_contains($leave->leave_type, 'ป่วย') || str_contains($leave->leave_type, 'คลอด')) $templateFile = 'template3.docx';
 
-            $templatePath = storage_path('app/' . $templateFile);
+            $templatePath = public_path($templateFile);
             
             if (!file_exists($templatePath)) {
                 return response()->json([
                     'status' => 'success', 
-                    'message' => 'บันทึกข้อมูลลงระบบสำเร็จ (แต่ไม่พบไฟล์เทมเพลต ' . $templateFile . ')',
+                    'message' => 'บันทึกข้อมูลสำเร็จ (แต่ไม่พบไฟล์เทมเพลต ' . $templateFile . ')',
                     'downloadUrl' => null
                 ]);
             }
 
             $templateProcessor = new TemplateProcessor($templatePath);
             
-            // แทนที่ข้อมูลผู้บังคับบัญชา
-            $templateProcessor = public_path('cmd_rank', $leader ? $leader->cmd_rank : 'พ.ต.ท.');
-            $templateProcessor = public_path('cmd_name', $leader ? $leader->cmd_name : '....................');
-            $templateProcessor = public_path('cmd_position', $leader ? $leader->cmd_position : 'สวป.สภ.เมืองนครราชสีมา');
+            // ใช้ setValue แทน public_path
+            $templateProcessor->setValue('cmd_rank', $leader ? $leader->cmd_rank : 'พ.ต.ท.');
+            $templateProcessor->setValue('cmd_name', $leader ? $leader->cmd_name : '....................');
+            $templateProcessor->setValue('cmd_position', $leader ? $leader->cmd_position : 'สวป.สภ.เมืองนครราชสีมา');
             
-            $templateProcessor = public_path('sup_rank', $leader ? $leader->sup_rank : 'พ.ต.อ.');
-            $templateProcessor = public_path('sup_name', $leader ? $leader->sup_name : 'ศิริชัย ศรีชัยปัญญา');
-            $templateProcessor = public_path('sup_position', $leader ? $leader->sup_position : 'ผกก.สภ.เมืองนครราชสีมา');
+            $templateProcessor->setValue('sup_rank', $leader ? $leader->sup_rank : 'พ.ต.อ.');
+            $templateProcessor->setValue('sup_name', $leader ? $leader->sup_name : 'ศิริชัย ศรีชัยปัญญา');
+            $templateProcessor->setValue('sup_position', $leader ? $leader->sup_position : 'ผกก.สภ.เมืองนครราชสีมา');
 
-            // --- เริ่ม: แทนที่ตัวแปรลงใน Word ให้ครบถ้วน ---
             $cleanName = trim(str_replace($leave->rank ?? '', '', $leave->fullname));
-            $templateProcessor = public_path('fullname', $cleanName);
-            $templateProcessor = public_path('rank', $leave->rank ?? '');
-            $templateProcessor = public_path('position', $leave->position ?? '');
-            $templateProcessor = public_path('affiliation', $leave->affiliation ?? 'สภ.เมืองนครราชสีมา');
-            $templateProcessor = public_path('duty', $leave->duty ?? '');
-            $templateProcessor = public_path('contact', $this->toThaiNum($leave->phone));
+            $templateProcessor->setValue('fullname', $cleanName);
+            $templateProcessor->setValue('rank', $leave->rank ?? '');
+            $templateProcessor->setValue('position', $leave->position ?? '');
+            $templateProcessor->setValue('affiliation', $leave->affiliation ?? 'สภ.เมืองนครราชสีมา');
+            $templateProcessor->setValue('duty', $leave->duty ?? '');
+            $templateProcessor->setValue('contact', $this->toThaiNum($leave->phone));
             
-            $templateProcessor = public_path('leaveRight', $this->toThaiNum($request->input('leaveRight', 10)));
-            $templateProcessor = public_path('reason', $leave->reason ?? '-');
+            $templateProcessor->setValue('leaveRight', $this->toThaiNum($request->input('leaveRight', 10)));
+            $templateProcessor->setValue('reason', $leave->reason ?? '-');
 
             $cDate = Carbon::parse($leave->create_date);
-            $templateProcessor = public_path('day', $this->toThaiNum($cDate->day));
-            $templateProcessor = public_path('month', $this->getThaiMonth($cDate->month));
-            $templateProcessor = public_path('year', $this->toThaiNum($cDate->year + 543));
-            $templateProcessor = public_path('cMonth', $this->getThaiMonth($cDate->month));
+            $templateProcessor->setValue('day', $this->toThaiNum($cDate->day));
+            $templateProcessor->setValue('month', $this->getThaiMonth($cDate->month));
+            $templateProcessor->setValue('year', $this->toThaiNum($cDate->year + 543));
+            $templateProcessor->setValue('cMonth', $this->getThaiMonth($cDate->month));
 
             $sDate = Carbon::parse($leave->start_date);
             $eDate = Carbon::parse($leave->end_date);
             
-            $templateProcessor = public_path('sDay', $this->toThaiNum($sDate->day));
-            $templateProcessor = public_path('sMonth', $this->getThaiMonth($sDate->month));
-            $templateProcessor = public_path('sYear', $this->toThaiNum($sDate->year + 543));
+            $templateProcessor->setValue('sDay', $this->toThaiNum($sDate->day));
+            $templateProcessor->setValue('sMonth', $this->getThaiMonth($sDate->month));
+            $templateProcessor->setValue('sYear', $this->toThaiNum($sDate->year + 543));
             
-            $templateProcessor = public_path('eDay', $this->toThaiNum($eDate->day));
-            $templateProcessor = public_path('eMonth', $this->getThaiMonth($eDate->month));
-            $templateProcessor = public_path('eYear', $this->toThaiNum($eDate->year + 543));
+            $templateProcessor->setValue('eDay', $this->toThaiNum($eDate->day));
+            $templateProcessor->setValue('eMonth', $this->getThaiMonth($eDate->month));
+            $templateProcessor->setValue('eYear', $this->toThaiNum($eDate->year + 543));
             
             $totalDays = $sDate->diffInDays($eDate) + 1;
-            $templateProcessor = public_path('totalDays', $this->toThaiNum($totalDays));
-            // --- สิ้นสุด: เพิ่มคำสั่งแทนที่ตัวแปร ---
+            $templateProcessor->setValue('totalDays', $this->toThaiNum($totalDays));
 
-            // ===============================================
-            // 💡 ตั้งชื่อไฟล์ใหม่ให้เป็น ชื่อประเภทการลา_ยศ_ชื่อ_นามสกุล
-            // ===============================================
-            // 1. นำช่องว่างออกและแทนที่ด้วย _ เพื่อไม่ให้ไฟล์มีปัญหา
             $safeName = str_replace(' ', '_', $leave->fullname);
-            // 2. สร้างรูปแบบชื่อไฟล์: ใบลาพักผ่อน_ร.ต.อ._คณาวุฒิ_เจริญศิริ_20240224_153020.docx
-            $fileName = 'ใบ' . $leave->leave_type .'_'. $safeName . '' . '.docx';
+            $fileName = 'ใบ' . $leave->leave_type .'_'. $safeName . '.docx';
             
-            $templateProcessor = public_path($saveDir . '/' . $fileName);
+            // ใช้ saveAs ในการบันทึกไฟล์
+            $templateProcessor->saveAs($saveDir . '/' . $fileName);
 
             return response()->json([
                 'status' => 'success', 
-                // ใช้ rawurlencode เฉพาะส่วนชื่อไฟล์ เพื่อป้องกัน Error เมื่อมีภาษาไทยใน URL
                 'downloadUrl' => url('storage/leaves/' . rawurlencode($fileName))
             ]);
 
