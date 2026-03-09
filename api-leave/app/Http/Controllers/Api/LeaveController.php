@@ -300,10 +300,11 @@ class LeaveController extends Controller
             if ($leave->leave_type === 'ลากิจ') $templateFile = 'template2.docx';
             elseif ($leave->leave_type === 'ลาป่วย') $templateFile = 'template3.docx';
 
-            $templatePath = storage_path('app/' . $templateFile);
+            // 💡 แก้ไข: ชี้ไปที่โฟลเดอร์ public
+            $templatePath = public_path($templateFile);
             if (!file_exists($templatePath)) return response()->json(['message' => 'Template not found: ' . $templateFile], 404);
 
-            $template = new TemplateProcessor($templatePath);
+            $templateProcessor = new TemplateProcessor($templatePath);
 
             $rank = $leave->rank ?? $user->rank ?? $this->extractRank($leave->fullname);
             $position = $leave->position ?? $user->position ?? '';
@@ -311,48 +312,46 @@ class LeaveController extends Controller
             
             $cleanName = trim(str_replace($rank, '', $leave->fullname));
 
-            $template = public_path('rank', $rank ?: '');
-            $template = public_path('fullname', $cleanName);
-            $template = public_path('position', $position ?: '');
-            $template = public_path('affiliation', $affiliation);
-            $template = public_path('duty', $leave->duty ?? '');
-            $template = public_path('contact', $this->toThaiNum($leave->phone));
-            $template = public_path('leaveRight', $this->toThaiNum(10)); 
+            // 💡 แก้ไข: ใช้ setValue()
+            $templateProcessor->setValue('rank', $rank ?: '');
+            $templateProcessor->setValue('fullname', $cleanName);
+            $templateProcessor->setValue('position', $position ?: '');
+            $templateProcessor->setValue('affiliation', $affiliation);
+            $templateProcessor->setValue('duty', $leave->duty ?? '');
+            $templateProcessor->setValue('contact', $this->toThaiNum($leave->phone));
+            $templateProcessor->setValue('leaveRight', $this->toThaiNum(10)); 
 
             $cDate = Carbon::parse($leave->create_date);
-            $template = public_path('day', $this->toThaiNum($cDate->day));
-            $template = public_path('month', $this->getThaiMonth($cDate->month));
-            $template = public_path('year', $this->toThaiNum($cDate->year + 543));
-            $template = public_path('cMonth', $this->getThaiMonth($cDate->month));
+            $templateProcessor->setValue('day', $this->toThaiNum($cDate->day));
+            $templateProcessor->setValue('month', $this->getThaiMonth($cDate->month));
+            $templateProcessor->setValue('year', $this->toThaiNum($cDate->year + 543));
+            $templateProcessor->setValue('cMonth', $this->getThaiMonth($cDate->month));
 
             $sDate = Carbon::parse($leave->start_date);
             $eDate = Carbon::parse($leave->end_date);
-            
-            $template = public_path('sDay', $this->toThaiNum($sDate->day));
-            $template = public_path('sMonth', $this->getThaiMonth($sDate->month));
-            $template = public_path('sYear', $this->toThaiNum($sDate->year + 543));
-            
-            $template = public_path('eDay', $this->toThaiNum($eDate->day));
-            $template = public_path('eMonth', $this->getThaiMonth($eDate->month));
-            $template = public_path('eYear', $this->toThaiNum($eDate->year + 543));
+            $templateProcessor->setValue('sDay', $this->toThaiNum($sDate->day));
+            $templateProcessor->setValue('sMonth', $this->getThaiMonth($sDate->month));
+            $templateProcessor->setValue('sYear', $this->toThaiNum($sDate->year + 543));
+            $templateProcessor->setValue('eDay', $this->toThaiNum($eDate->day));
+            $templateProcessor->setValue('eMonth', $this->getThaiMonth($eDate->month));
+            $templateProcessor->setValue('eYear', $this->toThaiNum($eDate->year + 543));
             
             $totalDays = $sDate->diffInDays($eDate) + 1;
-            $template = public_path('totalDays', $this->toThaiNum($totalDays));
-            $template = public_path('reason', $leave->reason ?? '-');
+            $templateProcessor->setValue('totalDays', $this->toThaiNum($totalDays));
+            $templateProcessor->setValue('reason', $leave->reason ?? '-');
 
             $leader = DB::table('commanders')->where('key_match', $leave->duty)->first();
-            $template = public_path('cmd_rank', $leader ? $leader->cmd_rank : 'ร.ต.อ.');
-            $template = public_path('cmd_name', $leader ? $leader->cmd_name : ''); 
-            $template = public_path('cmd_position', $leader ? $leader->cmd_position : 'รอง สวป.สภ.เมืองนครราชสีมา');
+            $templateProcessor->setValue('cmd_rank', $leader ? $leader->cmd_rank : 'ร.ต.อ.');
+            $templateProcessor->setValue('cmd_name', $leader ? $leader->cmd_name : ''); 
+            $templateProcessor->setValue('cmd_position', $leader ? $leader->cmd_position : 'รอง สวป.สภ.เมืองนครราชสีมา');
 
-            // ===============================================
-            // 💡 ตั้งชื่อไฟล์ใหม่เวลาผู้ใช้กดดาวน์โหลดซ้ำ
-            // ===============================================
             $safeName = str_replace(' ', '_', $leave->fullname);
             $outputName = 'ใบ' . $leave->leave_type . '_' . $safeName . '_' . date('Ymd_His') . '.docx';
             
             $outputPath = storage_path('app/public/' . $outputName);
-            $template = public_path($outputPath);
+            
+            // 💡 แก้ไข: ต้อง saveAs ก่อนถึงจะดาวน์โหลดได้
+            $templateProcessor->saveAs($outputPath);
 
             return response()->download($outputPath)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
