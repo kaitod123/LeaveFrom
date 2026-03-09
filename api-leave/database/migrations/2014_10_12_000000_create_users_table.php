@@ -21,12 +21,12 @@ public function up()
             $table->string('password');
             $table->string('role')->default('user');
             
-            // +++ สิ่งที่ต้องเพิ่มเข้าไปเพื่อให้ Error 500 หายไป +++
+            // +++ สิ่งที่ต้องเพิ่มเข้าไปตรงนี้ +++
             $table->string('rank')->nullable();
             $table->string('position')->nullable();
             $table->string('phone')->nullable();
             $table->string('duty')->nullable();
-            // +++++++++++++++++++++++++++++++++++++++++
+            // ++++++++++++++++++++++++++++
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

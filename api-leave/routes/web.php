@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Route;
 */
 use Illuminate\Support\Facades\Artisan;
 
+Route::get('/force-migrate-fresh', function () {
+    Artisan::call('migrate:fresh', ['--force' => true]);
+    
+    \App\Models\User::updateOrCreate(
+        ['username' => 'admin'],
+        [
+            'name' => 'Administrator',
+            'password' => bcrypt('password123'),
+            'role' => 'admin'
+        ]
+    );
+    return "Database Reset and Migrated Successfully!";
+});
 Route::get('/', function () {
     return view('welcome');
 });
