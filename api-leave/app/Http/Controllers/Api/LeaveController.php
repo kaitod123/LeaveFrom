@@ -267,18 +267,20 @@ class LeaveController extends Controller
     public function uploadPdf(Request $request, $id)
     {
         if ($request->user()->role !== 'admin') return response()->json(['message' => 'Unauthorized'], 403);
-        $request->validate(['pdf' => 'required|mimes:pdf|max:5120']);
+        $request->validate(['pdf' => 'required|mimes:pdf|max:5120']); // รับไฟล์ไม่เกิน 5MB
 
         $leave = LeaveRequest::findOrFail($id);
         if ($request->hasFile('pdf')) {
             $file = $request->file('pdf');
-            $fileName = 'Approved_' . $id . '_' . time() . '.pdf';
-            $path = $file->storeAs('leaves/approved', $fileName, 'public');
             
-            $leave->pdf_path = $path;
+            // แปลงไฟล์ PDF เป็นรหัสข้อความ (Base64) เพื่อยัดลงฐานข้อมูล
+            $base64Data = base64_encode(file_get_contents($file));
+            
+            $leave->pdf_base64 = $base64Data;
+            $leave->pdf_path = 'database'; // ใส่ไว้หลอกๆ ให้รู้ว่ามีไฟล์แล้ว
             $leave->save();
 
-            return response()->json(['status' => 'success', 'path' => $path]);
+            return response()->json(['status' => 'success', 'message' => 'บันทึก PDF ลงฐานข้อมูลสำเร็จ']);
         }
         return response()->json(['message' => 'No file'], 400);
     }
@@ -367,5 +369,20 @@ class LeaveController extends Controller
 
     private function toThaiNum($num) {
         return str_replace(['0','1','2','3','4','5','6','7','8','9'],['๐','๑','๒','๓','๔','๕','๖','๗','๘','๙'],strval($num));
+    }
+    public function viewPdf($id)
+    {
+        $leave = LeaveRequest::findOrFail($id);
+        
+        if (!$leave->pdf_base64) {
+            return response()->json(['message' => 'ไม่พบไฟล์ PDF'], 404);
+        }
+
+        // แปลงข้อความกลับเป็นไฟล์ PDF
+        $pdfDecoded = base64_decode($leave->pdf_base64);
+        
+        return response($pdfDecoded)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="leave_' . $id . '.pdf"');
     }
 }

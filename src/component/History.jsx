@@ -218,7 +218,7 @@ const History = ({ user }) => {
                 <td className="py-3 px-4 text-center">
                   <div className="flex justify-center gap-2">
                     {leave.pdf_path && (
-                        <a href={`https://po-leave-backend.onrender.com/storage/${leave.pdf_path}`} target="_blank" className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs border border-blue-200">PDF</a>
+                        <a href={`https://po-leave-backend.onrender.com/api/public/leave-request/${leave.id}/pdf`} target="_blank" className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs border border-blue-200">PDF</a>
                     )}
                     {canManage && (
                         <>
