@@ -106,21 +106,23 @@ function App() {
 
         <div className="p-4 flex-1 overflow-y-auto space-y-2">
           <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-2 mt-4">เมนูหลัก</div>
-          <NavButton active={currentPage === 'sick'} onClick={() => setCurrentPage('sick')} icon="🏖️" label="ลาพักผ่อน" />
-          <NavButton active={currentPage === 'personal'} onClick={() => setCurrentPage('personal')} icon="💼" label="ลากิจ" />
-          <NavButton active={currentPage === 'vacation'} onClick={() => setCurrentPage('vacation')} icon="🤒" label="ลาป่วย/คลอด" />
+
           <NavButton active={currentPage === 'history'} onClick={() => setCurrentPage('history')} icon="📜" label="ประวัติการลา" />
             <NavButton active={currentPage === 'calendar'} onClick={() => setCurrentPage('calendar')} icon="📅" label="ปฏิทินการลา" />
-              <NavButton active={currentPage === 'commanders'} onClick={() => setCurrentPage('commanders')} icon="👔" label="จัดการผู้บังคับบัญชา" />
+              
 
           {/* เมนูเฉพาะ Admin */}
           {user?.role === 'admin' && (
             <>
               <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-2 mt-6">ผู้ดูแลระบบ</div>
+                        <NavButton active={currentPage === 'sick'} onClick={() => setCurrentPage('sick')} icon="🏖️" label="ลาพักผ่อน" />
+          <NavButton active={currentPage === 'personal'} onClick={() => setCurrentPage('personal')} icon="💼" label="ลากิจ" />
+          <NavButton active={currentPage === 'vacation'} onClick={() => setCurrentPage('vacation')} icon="🤒" label="ลาป่วย/คลอด" />
               <NavButton active={currentPage === 'sickadmin'} onClick={() => setCurrentPage('sickadmin')} icon="👮" label="ลาแทนเจ้าหน้าที่" />
               <NavButton active={currentPage === 'ApproveLeave'} onClick={() => setCurrentPage('ApproveLeave')} icon="📋" label="อนุมัติคำขอ" />
               <NavButton active={currentPage === 'UserManagement'} onClick={() => setCurrentPage('UserManagement')} icon="👥" label="จัดการสมาชิก" />
               <NavButton active={currentPage === 'add_member'} onClick={() => setCurrentPage('add_member')} icon="➕" label="เพิ่มสมาชิกรายบุคคล" />
+                <NavButton active={currentPage === 'commanders'} onClick={() => setCurrentPage('commanders')} icon="👔" label="จัดการผู้บังคับบัญชา" />
             </>
           )}
         </div>
@@ -154,7 +156,7 @@ function App() {
           {currentPage === 'ApproveLeave' && <ApproveLeave user={user} />}
           {currentPage === 'add_member' && <Register onBack={() => setCurrentPage('history')} isInternal={true} />}
           {currentPage === 'calendar' && <LeaveCalendar />}
-          {currentPage === 'commanders' && <CommanderManagement />}
+          {currentPage === 'commanders' && <CommanderManagement user={user}/>}
         </div>
       </main>
     </div>
