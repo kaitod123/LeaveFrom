@@ -216,13 +216,14 @@ const UserManagement = ({ currentUser }) => {
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
         <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead className="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
                 <tr>
                 <th className="py-3 px-4">ชื่อ-สกุล</th>
                 <th className="py-3 px-4">Username</th>
                 <th className="py-3 px-4">Email (รีเซ็ตรหัส)</th>
                 <th className="py-3 px-4">ตำแหน่ง</th>
+                <th className="py-3 px-4">ชุดปฏิบัติหน้าที่</th>
                 <th className="py-3 px-4 text-center">สิทธิ์</th>
                 <th className="py-3 px-4 text-center">จัดการ</th>
                 </tr>
@@ -253,6 +254,11 @@ const UserManagement = ({ currentUser }) => {
                         {editingUser === user.id ? (
                             <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" placeholder="ตำแหน่ง" value={editForm.position} onChange={(e) => setEditForm({...editForm, position: e.target.value})} />
                         ) : user.position || '-'}
+                    </td>
+                    <td className="py-3 px-4 align-middle">
+                        {editingUser === user.id ? (
+                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" placeholder="ชุดปฏิบัติหน้าที่ (เช่น สายตรวจชุดที่ ๑)" value={editForm.duty} onChange={(e) => setEditForm({...editForm, duty: e.target.value})} />
+                        ) : user.duty || '-'}
                     </td>
 
                     <td className="py-3 px-4 text-center align-middle">
