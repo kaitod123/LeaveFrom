@@ -91,7 +91,7 @@ const UserManagement = ({ currentUser }) => {
         role: user.role, 
         rank: user.rank || '',
         position: user.position || '',
-        duty: user.duty || ''
+        duty: user.duty || '' // เตรียมข้อมูล duty สำหรับแก้ไข
     });
   };
 
@@ -152,7 +152,6 @@ const UserManagement = ({ currentUser }) => {
           👥 ระบบจัดการผู้ใช้งาน
         </h2>
         <div className="flex gap-2">
-            {/* นำปุ่ม Import (เพิ่มทีละหลายคน) กลับมา */}
             <button 
                 onClick={() => setShowImport(true)}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow font-semibold flex items-center gap-2 transition-transform hover:scale-105"
@@ -215,17 +214,18 @@ const UserManagement = ({ currentUser }) => {
       )}
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-        <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse whitespace-nowrap">
+        {/* เพิ่ม class custom-scrollbar และ pb-2 ตรงนี้เพื่อให้มีแถบเลื่อนชัดเจน */}
+        <div className="overflow-x-auto custom-scrollbar pb-2">
+            <table className="w-full text-left border-collapse whitespace-nowrap min-w-[900px]">
             <thead className="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
                 <tr>
                 <th className="py-3 px-4">ชื่อ-สกุล</th>
                 <th className="py-3 px-4">Username</th>
-                <th className="py-3 px-4">Email (รีเซ็ตรหัส)</th>
+                <th className="py-3 px-4">Email</th>
                 <th className="py-3 px-4">ตำแหน่ง</th>
                 <th className="py-3 px-4">ชุดปฏิบัติหน้าที่</th>
                 <th className="py-3 px-4 text-center">สิทธิ์</th>
-                <th className="py-3 px-4 text-center">จัดการ</th>
+                <th className="py-3 px-4 text-center sticky right-0 bg-gray-100 z-10 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.1)]">จัดการ</th>
                 </tr>
             </thead>
             <tbody className="text-gray-600 text-sm">
@@ -234,7 +234,7 @@ const UserManagement = ({ currentUser }) => {
                     
                     <td className="py-3 px-4 align-middle">
                         {editingUser === user.id ? (
-                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" value={editForm.name} onChange={(e) => setEditForm({...editForm, name: e.target.value})} />
+                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none min-w-[150px]" value={editForm.name} onChange={(e) => setEditForm({...editForm, name: e.target.value})} />
                         ) : <span className="font-bold text-gray-700">{user.name}</span>}
                     </td>
 
@@ -246,7 +246,7 @@ const UserManagement = ({ currentUser }) => {
 
                     <td className="py-3 px-4 align-middle">
                         {editingUser === user.id ? (
-                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" type="email" placeholder="email@gmail.com" value={editForm.email} onChange={(e) => setEditForm({...editForm, email: e.target.value})} />
+                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none min-w-[150px]" type="email" placeholder="email@gmail.com" value={editForm.email} onChange={(e) => setEditForm({...editForm, email: e.target.value})} />
                         ) : (user.email || <span className="text-red-400 text-xs italic">ยังไม่มีอีเมล</span>)}
                     </td>
 
@@ -255,9 +255,10 @@ const UserManagement = ({ currentUser }) => {
                             <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" placeholder="ตำแหน่ง" value={editForm.position} onChange={(e) => setEditForm({...editForm, position: e.target.value})} />
                         ) : user.position || '-'}
                     </td>
+
                     <td className="py-3 px-4 align-middle">
                         {editingUser === user.id ? (
-                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none" placeholder="ชุดปฏิบัติหน้าที่ (เช่น สายตรวจชุดที่ ๑)" value={editForm.duty} onChange={(e) => setEditForm({...editForm, duty: e.target.value})} />
+                            <input className="border p-1.5 w-full rounded focus:ring-2 focus:ring-blue-400 outline-none min-w-[200px]" placeholder="ชุดปฏิบัติหน้าที่ (เช่น สายตรวจชุดที่ ๑)" value={editForm.duty} onChange={(e) => setEditForm({...editForm, duty: e.target.value})} />
                         ) : user.duty || '-'}
                     </td>
 
@@ -274,7 +275,8 @@ const UserManagement = ({ currentUser }) => {
                         )}
                     </td>
 
-                    <td className="py-3 px-4 text-center align-middle">
+                    {/* เพิ่ม sticky ขวา ให้คอลัมน์จัดการตามมาด้วยเวลาเลื่อน */}
+                    <td className="py-3 px-4 text-center align-middle sticky right-0 bg-white group-hover:bg-blue-50 shadow-[-5px_0_10px_-5px_rgba(0,0,0,0.05)] transition-colors">
                         {editingUser === user.id ? (
                         <div className="flex justify-center gap-2">
                             <button onClick={() => handleSaveEdit(user.id)} disabled={isSaving} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded shadow text-xs font-bold">บันทึก</button>
@@ -307,6 +309,24 @@ const UserManagement = ({ currentUser }) => {
         }
         .animate-pop-in {
             animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* ตกแต่ง Scrollbar สำหรับตาราง */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px; /* ความหนาของแถบเลื่อนแนวนอน */
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 8px;
+            border: 2px solid #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
         }
       `}</style>
     </div>
